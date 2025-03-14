@@ -5,6 +5,14 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    double deviceHeight = MediaQuery.of(context).size.height;
+    double deviceWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      body: SizedBox(
+        height: deviceHeight,
+        width: deviceWidth,
+        child: Column(),
+      ),
+    );
   }
 }
