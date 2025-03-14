@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:notes_app/config/routes.dart';
 import 'package:notes_app/config/themes.dart';
+import 'package:notes_app/core/common/constans.dart';
 import 'package:notes_app/core/common/themes/theme_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox(boxName);
   runApp(const MyApp());
 }
 
