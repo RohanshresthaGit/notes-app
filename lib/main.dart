@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:notes_app/config/routes.dart';
 import 'package:notes_app/config/themes.dart';
-import 'package:notes_app/core/common/constans.dart';
 import 'package:notes_app/core/common/themes/theme_viewmodel.dart';
+import 'package:notes_app/services/hive_services/hive_service.dart';
 import 'package:provider/provider.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
-  await Hive.openBox(boxName);
+  HiveService.initializeHive();
+  HiveService.openHive();
   runApp(const MyApp());
 }
 
