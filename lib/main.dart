@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   HiveService.initializeHive();
-  HiveService.openHive();
   runApp(const MyApp());
 }
 
