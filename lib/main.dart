@@ -8,7 +8,12 @@ import 'package:provider/provider.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   HiveService.initializeHive();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeViewmodel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -17,22 +22,19 @@ class MyApp extends StatelessWidget {
   // Root of our application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ThemeViewmodel(),
-      child: Consumer<ThemeViewmodel>(
-        builder:
-            (context, theme, child) => MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Notes',
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
-              initialRoute: Routes.splash,
-              themeMode: theme.themeMode,
-              themeAnimationCurve: Curves.easeInOut,
-              themeAnimationDuration: Duration(seconds: 3),
-              onGenerateRoute: generateRoute,
-            ),
-      ),
+    return Consumer<ThemeViewmodel>(
+      builder:
+          (context, theme, child) => MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Notes',
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            initialRoute: Routes.splash,
+            themeMode: theme.themeMode,
+            // themeAnimationCurve: Curves.linear,
+            // themeAnimationDuration: Duration(milliseconds: 500),
+            onGenerateRoute: generateRoute,
+          ),
     );
   }
 }

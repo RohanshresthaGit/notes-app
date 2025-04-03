@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ThemeViewmodel extends ChangeNotifier {
 
   // set Light theme by default
-  ThemeMode _themeMode = ThemeMode.light;
+  ThemeMode _themeMode = ThemeMode.system;
 
   ThemeMode get themeMode => _themeMode;
 

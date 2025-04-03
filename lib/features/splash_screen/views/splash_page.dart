@@ -26,7 +26,7 @@ class _SplashPageState extends State<SplashPage> {
 
   startSplashTimer() {
     _timer = Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushReplacementNamed(context, '/notes');
     });
   }
 
@@ -39,44 +39,47 @@ class _SplashPageState extends State<SplashPage> {
         body: SizedBox(
           height: deviceHeight,
           width: deviceWidth,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Image.asset(
-                AppImage.logo,
-                height: deviceHeight / 4,
-                width: deviceWidth / 2,
-              ),
-              SizedBox(height: deviceHeight / 3.5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
-                    child: Image.asset(
-                      AppImage.developer,
-                      height: 40,
-                      width: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Image.asset(
+                  AppImage.logo,
+                  height: deviceHeight / 4,
+                  width: deviceWidth / 2,
+                ),
+                SizedBox(height: deviceHeight / 3.5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                      child: Image.asset(
+                        AppImage.developer,
+                        height: 40,
+                        width: 40,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "from",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      Text(
-                        "Rohan Stha",
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                    SizedBox(width: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "from",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        Text(
+                          "Rohan Stha",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

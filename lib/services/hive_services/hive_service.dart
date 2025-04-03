@@ -3,7 +3,9 @@ import 'package:notes_app/core/common/Model/notes_model.dart';
 import 'package:notes_app/core/common/constants/constans.dart';
 
 class HiveService {
+  
   static late Box<Notes> _box;
+
   static Future<void> initializeHive() async {
     await Hive.initFlutter();
     Hive.registerAdapter(NotesAdapter());
