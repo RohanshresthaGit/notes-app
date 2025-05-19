@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/config/routes.dart';
 import 'package:notes_app/core/common/themes/theme_viewmodel.dart';
+import 'package:notes_app/features/notes/view_model/delete_notes_view_model.dart';
+import 'package:notes_app/services/auth_services.dart';
 import 'package:provider/provider.dart';
 
 class NotesAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -13,9 +16,25 @@ class NotesAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<DeleteNotesViewModel>();
     return SliverAppBar.large(
+      leading:
+          context.watch<DeleteNotesViewModel>().isSelectedMode
+              ? IconButton(
+                onPressed:
+                    () => context.read<DeleteNotesViewModel>().clearSelection(),
+                icon: Icon(Icons.close),
+              )
+              : null,
       actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.folder_outlined)),
+        IconButton(
+          onPressed: () {
+            context.read<AuthServices>().message =
+                'Enter privacy Protection Password';
+            Navigator.pushNamed(context, Routes.authenticateUser);
+          },
+          icon: Icon(Icons.folder_outlined),
+        ),
         IconButton(
           onPressed: () {
             context.read<ThemeViewmodel>().toggleTheme();
@@ -23,19 +42,11 @@ class NotesAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: Icon(Icons.dark_mode_rounded),
         ),
       ],
-      title: Text(appBarTitle),
-      // leading:
-      //     canPop
-      //         ? IconButton(
-      //           onPressed: () => Navigator.pop(context),
-      //           icon: Icon(Icons.arrow_back_ios),
-      //         )
-      //         : null,
-      // flexibleSpace: FlexibleSpaceBar(
-      //   // titlePadding: EdgeInsets.only(left: 16),
-      //   centerTitle: true,
-      //   title: Text(appBatTitle),
-      // ),
+      title: Text(
+        provider.isSelectedMode
+            ? '${provider.selectedItems.length.toString()} item selected'
+            : appBarTitle,
+      ),
     );
   }
 
