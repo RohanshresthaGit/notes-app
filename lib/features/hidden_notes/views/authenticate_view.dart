@@ -48,90 +48,84 @@ class AuthenticateView extends StatelessWidget {
             ),
             Text(watchAuthService.message),
             Consumer<AuthServices>(
-              builder:
-                  (_, value, __) => Column(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.4,
-                        child: PatternLock(
-                          showInput: provider.getSwitch(showPattern),
-                          fillPoints: true,
-                          pointRadius: 3,
-                          relativePadding: 0.5,
-                          onInputComplete:
-                              (input) async =>
-                                  isForgotPattern
-                                      ? await provider.forgotPattern(input)
-                                      : isChangePattern
-                                      ? await provider.changePattern(
-                                        input,
-                                        isChangePattern,
-                                      )
-                                      : provider.getPatternCallBack(
-                                        input,
-                                        context,
-                                        isChangePattern,
-                                      ),
-                          notSelectedColor: theme.colorScheme.onPrimary,
-                          selectedColor: theme.colorScheme.onPrimary,
-                        ),
-                      ),
-                      if (provider.isConfirmPattern)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ElevatedButton(
-                              style: theme.elevatedButtonTheme.style?.copyWith(
-                                shape: WidgetStateProperty.all<
-                                  RoundedRectangleBorder
-                                >(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
+              builder: (_, value, __) => Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    child: PatternLock(
+                      showInput: provider.getSwitch(showPattern),
+                      fillPoints: true,
+                      pointRadius: 3,
+                      relativePadding: 0.5,
+                      onInputComplete: (input) async => isForgotPattern
+                          ? await provider.forgotPattern(input)
+                          : isChangePattern
+                              ? await provider.changePattern(
+                                  input,
+                                  isChangePattern,
+                                )
+                              : provider.getPatternCallBack(
+                                  input,
+                                  context,
+                                  isChangePattern,
                                 ),
-                              ),
-                              onPressed: () {
-                                provider.resetPattern(context);
-                              },
-                              child: Text(
-                                'Reset',
-                                style: theme.textTheme.bodyMedium,
-                              ),
-                            ),
-                            ElevatedButton(
-                              style: theme.elevatedButtonTheme.style?.copyWith(
-                                shape: WidgetStateProperty.all<
-                                  RoundedRectangleBorder
-                                >(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                ),
-                              ),
-                              onPressed: () async {
-                                if (value.showButton) {
-                                  value.patternMatched(context);
-                                }
-                              },
-                              child: Text(
-                                'Confirm',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color:
-                                      value.showButton
-                                          ? theme.colorScheme.onPrimary
-                                          : AppColors.unHighlightedColor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                    ],
+                      notSelectedColor: theme.colorScheme.onPrimary,
+                      selectedColor: theme.colorScheme.onPrimary,
+                    ),
                   ),
+                  if (provider.isConfirmPattern)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton(
+                          style: theme.elevatedButtonTheme.style?.copyWith(
+                            shape:
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            provider.resetPattern(context);
+                          },
+                          child: Text(
+                            'Reset',
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: theme.elevatedButtonTheme.style?.copyWith(
+                            shape:
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (value.showButton) {
+                              value.patternMatched(context);
+                            }
+                          },
+                          child: Text(
+                            'Confirm',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: value.showButton
+                                  ? theme.colorScheme.onPrimary
+                                  : AppColors.unHighlightedColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
             ),
             TextButton(
               onPressed: () {
                 navigation.go(Routes.authenticateUser, {
-                  'isForgotPattern': isForgotPattern,
+                  'isForgot': true,
                 });
                 provider.message = 'Enter new pattern to reset';
               },
