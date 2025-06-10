@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:local_auth_android/local_auth_android.dart';
 import 'package:notes_app/config/routes.dart';
 import 'package:notes_app/core/common/constants/constans.dart';
 import 'package:notes_app/main.dart';
@@ -11,6 +13,7 @@ class AuthServices with ChangeNotifier {
   bool isPatternValidated = false;
   List<int> userPattern = [];
   String message = 'Enter privacy Protection Password';
+  final LocalAuthentication _biometrics = LocalAuthentication();
   AuthServices() {
     initPatternBox();
   }
@@ -129,9 +132,13 @@ class AuthServices with ChangeNotifier {
   }
 
   Future<void> forgotPattern(List<int> pattern) async {
+    if (pattern.length < 4) {
+      message = 'Pattern must be at least 4 points';
+      notifyListeners();
+      return;
+    }
     if (userPattern.isNotEmpty) {
       if (userPattern.isEqualTo(pattern)) {
-        message = 'Repeat the pattern';
         await setPattern(pattern);
         navigation.go(Routes.hiddenNotes);
         userPattern.clear();
@@ -142,7 +149,7 @@ class AuthServices with ChangeNotifier {
       userPattern.clear();
       userPattern.addAll(pattern);
       navigation.go(Routes.authenticateUser, {"isForgot": true});
-      message = 'Enter privacy Protection Password';
+      message = 'Repeat the pattern';
     }
   }
 
@@ -190,6 +197,39 @@ class AuthServices with ChangeNotifier {
     isConfirmPattern = false;
     isPatternValidated = false;
     message = 'Enter privacy Protection Password';
+  }
+
+  Future<void> authenticateWithBiometrics() async {
+    if (getSwitch(enableBiometrics) == false ||
+        isConfirmPattern ||
+        isPatternValidated ||
+        showButton) {
+      return;
+    }
+    final isBiometricAvailable = await _biometrics.canCheckBiometrics;
+    if (isBiometricAvailable) {
+      try {
+        final didAuthenticate = await _biometrics.authenticate(
+            authMessages: const [
+              AndroidAuthMessages(
+                // signInTitle: 'Custom Sign-In Title',
+                biometricHint: 'Touch sensor to authenticate',
+                cancelButton: 'No thanks',
+              ),
+            ],
+            localizedReason: "Enter fingerprint to access hidden notes",
+            options: const AuthenticationOptions(
+                stickyAuth: true, biometricOnly: true));
+
+        if (didAuthenticate) {
+          navigation.go(Routes.hiddenNotes);
+        } else {
+          message = 'Enter privacy Protection Password';
+        }
+      } catch (e) {
+        debugPrint('Error during biometric authentication: $e');
+      }
+    }
   }
 }
 

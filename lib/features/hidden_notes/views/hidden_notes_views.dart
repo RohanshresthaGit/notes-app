@@ -79,11 +79,6 @@ class _HiddenNotesViewsState extends State<HiddenNotesViews> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           BottomNavigationItem(
-                            title: 'Hide',
-                            onTap: () {},
-                            icon: Icons.lock_sharp,
-                          ),
-                          BottomNavigationItem(
                             title: 'Move to',
                             onTap: () => notesVm.moveNotes(),
                             icon: Icons.folder,

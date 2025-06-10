@@ -23,19 +23,19 @@ class NotesAppBar extends StatelessWidget implements PreferredSizeWidget {
     final provider = context.read<UiViewModel>();
     return SliverAppBar.large(
       automaticallyImplyLeading: false,
-      leading:
-          context.watch<UiViewModel>().isSelectedMode
-              ? IconButton(
-                onPressed: () => context.read<UiViewModel>().clearSelection(),
-                icon: const Icon(Icons.close),
-              )
-              : null,
+      leading: context.watch<UiViewModel>().isSelectedMode
+          ? IconButton(
+              onPressed: () => context.read<UiViewModel>().clearSelection(),
+              icon: const Icon(Icons.close),
+            )
+          : null,
       actions: [
         IconButton(
-          onPressed: () {
+          onPressed: () async {
             if (authProvider.getSwitch(enableAuth)) {
               authProvider.message = 'Enter privacy Protection Password';
               navigation.push(Routes.authenticateUser);
+              await authProvider.authenticateWithBiometrics();
             } else {
               showBottomAlertDialog(context);
             }

@@ -59,11 +59,6 @@ class ViewNotesView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       BottomNavigationItem(
-                        title: 'Hide',
-                        onTap: () {},
-                        icon: Icons.lock_sharp,
-                      ),
-                      BottomNavigationItem(
                         title: 'Move to',
                         onTap:
                             () =>
