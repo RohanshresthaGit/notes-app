@@ -1,3 +1,9 @@
  const boxName = 'notes';
+ const hiddenboxName = 'hiddenNotes';
  const authBox = 'authBox';
  const pattern = 'pattern';
+ const showPattern = 'showPattern';
+ const enableAuth = 'enableAuth';
+ const enableBiometrics = 'enableBiometrics';
+ const theme = 'theme';
+ const themeBox = 'themeBox';

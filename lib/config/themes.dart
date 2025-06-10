@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static final ThemeData lightTheme = ThemeData(
-    textSelectionTheme: TextSelectionThemeData(
+    textSelectionTheme: const TextSelectionThemeData(
       cursorColor: Colors.black, // Global cursor color
     ),
     inputDecorationTheme: InputDecorationTheme(
-      counterStyle: TextStyle(color: Colors.black),
-      border: OutlineInputBorder(borderSide: BorderSide.none),
+      counterStyle: const TextStyle(color: Colors.black),
+      border: const OutlineInputBorder(borderSide: BorderSide.none),
       hintStyle: TextStyle(
         fontSize: 24,
         color: Colors.grey[600],
@@ -17,21 +17,24 @@ class AppTheme {
     // primarySwatch: ,
     scaffoldBackgroundColor: Colors.white,
     colorScheme: ColorScheme.fromSeed(
-      primary: Color(0xffFFFAFA),
+      primary: const Color(0xffFFFAFA),
       onPrimary: Colors.black,
+      onSurface: Colors.white,
+      primaryContainer: const Color(0xFF1E88E5),
+      secondaryContainer: Colors.grey,
       seedColor: Colors.white, // Set primary color to white
       brightness: Brightness.light, // Ensures light mode
     ),
     useMaterial3: true,
     brightness: Brightness.light,
     // scaffoldBackgroundColor: Colors.white,
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       // color: Colors.white,
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
       centerTitle: true,
     ),
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       bodyLarge: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w700,
@@ -53,7 +56,23 @@ class AppTheme {
         color: Colors.black,
       ),
     ),
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+
+    switchTheme: SwitchThemeData(
+      thumbColor: WidgetStateProperty.all(Colors.white),
+      trackColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return Colors.black;
+        }
+        return Colors.grey;
+      }),
+      trackOutlineColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return Colors.black;
+        }
+        return Colors.grey;
+      }),
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.white,
       selectedIconTheme: IconThemeData(
         size: 30,
@@ -78,7 +97,7 @@ class AppTheme {
       selectedItemColor: Colors.white,
       unselectedItemColor: Colors.white,
     ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
     ),
@@ -87,7 +106,7 @@ class AppTheme {
         disabledBackgroundColor: Colors.white,
         disabledForegroundColor: Colors.grey,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        textStyle: TextStyle(
+        textStyle: const TextStyle(
           fontSize: 16,
           color: Colors.white,
           fontWeight: FontWeight.w700,
@@ -97,14 +116,12 @@ class AppTheme {
   );
 
   static final ThemeData darkTheme = ThemeData(
-    
-    textSelectionTheme: TextSelectionThemeData(
-      
+    textSelectionTheme: const TextSelectionThemeData(
       cursorColor: Colors.white, // Global cursor color
     ),
     inputDecorationTheme: InputDecorationTheme(
-      border: OutlineInputBorder(borderSide: BorderSide.none),
-      counterStyle: TextStyle(color: Colors.white),
+      border: const OutlineInputBorder(borderSide: BorderSide.none),
+      counterStyle: const TextStyle(color: Colors.white),
       hintStyle: TextStyle(
         fontSize: 24,
         color: Colors.grey[600],
@@ -113,8 +130,11 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: Colors.black,
     colorScheme: ColorScheme.fromSeed(
-      primary: Color(0xff2C2C2C),
+      primaryContainer: const Color(0xFF1E88E5),
+      secondaryContainer: Colors.grey,
+      primary: const Color(0xff2C2C2C),
       onPrimary: Colors.white,
+      onSurface: Colors.black,
       seedColor: Colors.white, // Set primary color to white
       brightness: Brightness.dark, // Ensures light mode
     ),
@@ -122,12 +142,12 @@ class AppTheme {
     brightness: Brightness.dark,
     // primarySwatch: Colors.teal,
     // scaffoldBackgroundColor: Colors.black,
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       backgroundColor: Colors.black,
       foregroundColor: Colors.white,
       centerTitle: true,
     ),
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       bodyLarge: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w700,
@@ -149,7 +169,22 @@ class AppTheme {
         color: Colors.white,
       ),
     ),
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    switchTheme: SwitchThemeData(
+      thumbColor: WidgetStateProperty.all(Colors.black),
+      trackColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return Colors.white;
+        }
+        return Colors.grey;
+      }),
+      trackOutlineColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return Colors.white;
+        }
+        return Colors.grey;
+      }),
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.black,
       selectedIconTheme: IconThemeData(
         size: 30,
@@ -174,7 +209,7 @@ class AppTheme {
       selectedItemColor: Colors.black,
       unselectedItemColor: Colors.black,
     ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: Colors.black,
       foregroundColor: Colors.white,
     ),
@@ -183,7 +218,7 @@ class AppTheme {
         disabledBackgroundColor: Colors.tealAccent,
         disabledForegroundColor: Colors.grey,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        textStyle: TextStyle(
+        textStyle: const TextStyle(
           fontSize: 16,
           color: Colors.black,
           fontWeight: FontWeight.w700,

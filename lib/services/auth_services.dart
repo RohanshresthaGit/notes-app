@@ -1,10 +1,15 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:notes_app/config/routes.dart';
 import 'package:notes_app/core/common/constants/constans.dart';
+import 'package:notes_app/main.dart';
 
 class AuthServices with ChangeNotifier {
   late Box _box;
+  bool isConfirmPattern = false;
+  bool showButton = false;
+  bool isPatternValidated = false;
+  List<int> userPattern = [];
   String message = 'Enter privacy Protection Password';
   AuthServices() {
     initPatternBox();
@@ -12,6 +17,7 @@ class AuthServices with ChangeNotifier {
 
   initPatternBox() async {
     _box = await Hive.openBox(authBox);
+    getSwitch(enableAuth);
   }
 
   // var box = Hive.box(authBox);
@@ -26,38 +32,171 @@ class AuthServices with ChangeNotifier {
   }
 
   List<int> getPattern() {
-    final patter = _box.get(pattern)?.cast<int>();
-    print('pattern: $patter');
+    final patter = (_box.get(pattern) as List<dynamic>?)?.cast<int>() ?? [];
     return patter;
   }
 
-  chagnePattern(List<int> input) {
-    _box.put(pattern, input);
+  void disableAuth() {
+    userPattern.clear();
+    _box.put(pattern, null);
+    isConfirmPattern = false;
+    showButton = false;
+    message = 'Enter privacy Protection Password';
+  }
+
+  setSwitch(String key, bool value) {
+    _box.put(key, value);
+
+    if (key == enableAuth && !value) {
+      disableAuth();
+    }
     notifyListeners();
   }
 
-  getPatternCallBack(List<int> input, BuildContext context) {
+  bool getSwitch(String key) {
+    final value = _box.get(
+      key,
+      defaultValue: key == enableBiometrics ? false : true,
+    );
+    return value;
+  }
+
+  void resetPattern(BuildContext context) {
+    userPattern.clear();
+    isConfirmPattern = false;
+    showButton = false;
+    message = 'Enter privacy Protection Password';
+    notifyListeners();
+    navigation.go(Routes.authenticateUser);
+  }
+
+  Future<void> patternMatched(BuildContext context) async {
+    // pattern matched
+    setSwitch(enableAuth, true);
+
+    await setPattern(userPattern);
+    navigation.go(Routes.hiddenNotes);
+    isConfirmPattern = false;
+    showButton = false;
+    // userPattern.clear();
+    message = 'Enter privacy Protection Password';
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    userPattern.clear();
+    super.dispose();
+  }
+
+  void getPatternCallBack(
+    List<int> input,
+    BuildContext context,
+    bool isChangePattern,
+  ) async {
+    if (showButton) return;
+    if (input.length < 4) {
+      message = 'Pattern must be at least 4 points';
+      notifyListeners();
+      return;
+    }
     if (isPatternSet()) {
+      // pattern is set
       if (getPattern().isEqualTo(input)) {
-        Navigator.pushReplacementNamed(context, Routes.hiddenNotes);
-        print("Authenicate succesfull");
+        navigation.go(Routes.hiddenNotes);
       } else {
         message = 'Try again';
         notifyListeners();
-        print("Authenicate failed");
       }
     } else {
-      setPattern(input);
-      message = 'pattern set successfully';
-      notifyListeners();
+      if (isConfirmPattern) {
+        if (!userPattern.isEqualTo(input)) {
+          message = 'Patterns do not match';
+          notifyListeners();
+        } else {
+          message = 'Pattern matched press the confirm button';
+          showButton = true;
+          notifyListeners();
+        }
+      } else {
+        navigation.go(Routes.authenticateUser);
+        userPattern.addAll(input);
+        message = 'Repeat the pattern';
+        isConfirmPattern = true;
+        notifyListeners();
+      }
     }
+  }
+
+  Future<void> forgotPattern(List<int> pattern) async {
+    if (userPattern.isNotEmpty) {
+      if (userPattern.isEqualTo(pattern)) {
+        message = 'Repeat the pattern';
+        await setPattern(pattern);
+        navigation.go(Routes.hiddenNotes);
+        userPattern.clear();
+      } else {
+        message = 'Patterns do not match';
+      }
+    } else {
+      userPattern.clear();
+      userPattern.addAll(pattern);
+      navigation.go(Routes.authenticateUser, {"isForgot": true});
+      message = 'Enter privacy Protection Password';
+    }
+  }
+
+  Future<void> changePattern(List<int> pattern, bool isChangePattern) async {
+    if (!isPatternSet()) return;
+    if (pattern.length < 4) {
+      message = 'Pattern must be at least 4 points';
+      notifyListeners();
+      return;
+    }
+
+    if (isConfirmPattern) {
+      if (!userPattern.isEqualTo(pattern)) {
+        message = 'Patterns do not match';
+        notifyListeners();
+      } else {
+        await setPattern(pattern);
+        message = 'Pattern reset succesfully';
+        navigation.go(Routes.notes);
+        clearFlags();
+        notifyListeners();
+      }
+    } else if (isPatternValidated) {
+      navigation.go(Routes.authenticateUser, {"isChange": true});
+      userPattern.addAll(pattern);
+
+      message = 'repeat the pattern';
+      isConfirmPattern = true;
+      notifyListeners();
+    } else {
+      if (getPattern().isEqualTo(pattern)) {
+        navigation.go(Routes.authenticateUser, {"isChange": true});
+        message = 'set new pattern';
+        isPatternValidated = true;
+        userPattern.clear();
+      } else {
+        message = 'Try again';
+        notifyListeners();
+      }
+    }
+  }
+
+  clearFlags() {
+    userPattern.clear();
+    isConfirmPattern = false;
+    isPatternValidated = false;
+    message = 'Enter privacy Protection Password';
   }
 }
 
 extension on List<int> {
   bool isEqualTo(List<int> other) {
-    if (this.length != other.length) return false;
-    for (int i = 0; i < this.length; i++) {
+    if (length != other.length) return false;
+    for (int i = 0; i < length; i++) {
       if (this[i] != other[i]) return false;
     }
     return true;

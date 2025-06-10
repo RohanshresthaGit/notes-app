@@ -1,57 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/features/notes/view_model/delete_notes_view_model.dart';
+import 'package:notes_app/core/common/Model/notes_model.dart';
 import 'package:provider/provider.dart';
 
-class NotesTileComponent extends StatelessWidget {
+import 'base_class.dart';
+
+class NotesTileComponent<T extends BaseUiViewModel> extends StatelessWidget {
   const NotesTileComponent({
     super.key,
-    required this.title,
-    required this.description,
-    required this.createdAt,
     required this.index,
+    required this.note,
   });
-  final String title, description, createdAt;
   final int index;
+  final Notes note;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final viewModel = context.read<T>();
     return ListTile(
-      onLongPress:
-          () => context.read<DeleteNotesViewModel>().onLongPress(index),
-      onTap: () => context.read<DeleteNotesViewModel>().onTap(index, context),
-      contentPadding: EdgeInsets.symmetric(horizontal: 15),
+      onLongPress: () => viewModel.onLongPress(index),
+      onTap: () => viewModel.onTap(index),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 15),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       isThreeLine: true,
-      tileColor: Theme.of(context).primaryColor,
-      title: Text(title, style: Theme.of(context).textTheme.headlineMedium),
+      tileColor: theme.primaryColor,
+      title: Text(note.title, style: theme.textTheme.headlineMedium),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            description,
+            note.description,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium,
           ),
-          Text(createdAt, style: Theme.of(context).textTheme.bodySmall),
+          Text(note.formattedDate, style: theme.textTheme.bodySmall),
         ],
       ),
-      trailing:
-          context.read<DeleteNotesViewModel>().isSelectedMode
-              ? Consumer<DeleteNotesViewModel>(
-                builder:
-                    (context, value, child) => Checkbox(
-                      value: context
-                          .read<DeleteNotesViewModel>()
-                          .selectedItems
-                          .contains(index),
-                      onChanged:
-                          (value) => context.read<DeleteNotesViewModel>().onTap(
-                            index,
-                            context,
-                          ),
-                    ),
-              )
-              : null,
+      trailing: Consumer<T>(
+        builder:
+            (context, provider, child) =>
+                provider.isSelectedMode
+                    ? Checkbox(
+                      value: provider.selectedItems.contains(index),
+                      onChanged: (value) => provider.onTap(index),
+                    )
+                    : const SizedBox.shrink(),
+      ),
     );
   }
 }

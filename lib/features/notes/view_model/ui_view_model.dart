@@ -1,19 +1,26 @@
 import 'package:flutter/widgets.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../config/routes.dart';
-import '../../../core/common/Model/notes_model.dart';
-import 'view_notes_view_model.dart';
+import '../../../main.dart';
+import '../widgets/base_class.dart';
 
-class DeleteNotesViewModel with ChangeNotifier {
-  final Box<Notes>? box;
+class UiViewModel with ChangeNotifier implements BaseUiViewModel {
+  @override
   bool isSelectedMode = false;
-  int selectedIndex = 0;
   final List<int> _selectedItems = [];
-  final ViewNotesViewModel viewNotesViewModel;
+  @override
   List<int> get selectedItems => _selectedItems;
-  DeleteNotesViewModel(this.viewNotesViewModel, {required this.box});
+  UiViewModel();
 
+  navigateToAdd() {
+    navigation.push(Routes.addNotes);
+  }
+
+  navigateToEdit(Map<String, dynamic>? args) {
+    navigation.push(Routes.updateNotes, args);
+  }
+
+  @override
   onLongPress(int index) {
     if (isSelectedMode) return;
     isSelectedMode = true;
@@ -21,7 +28,8 @@ class DeleteNotesViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  onTap(int index, BuildContext context) {
+  @override
+  onTap(int index) {
     if (isSelectedMode) {
       if (_selectedItems.contains(index)) {
         _selectedItems.remove(index);
@@ -30,22 +38,19 @@ class DeleteNotesViewModel with ChangeNotifier {
       }
       notifyListeners();
     } else {
-      Navigator.pushNamed(
-        context,
-        Routes.updateNotes,
-        arguments: {'index': index},
-      );
+      navigateToEdit({'index': index});
     }
   }
 
+  @override
   clearSelection() {
     isSelectedMode = false;
     _selectedItems.clear();
     notifyListeners();
   }
 
-  deleteNotes() {
-    viewNotesViewModel.deleteNotesByIndex(_selectedItems);
-    clearSelection();
-  }
+  // Future<void> deleteNotes() async {
+  //   await notesViewModel.deleteNotesByIndex();
+  //   clearSelection();
+  // }
 }

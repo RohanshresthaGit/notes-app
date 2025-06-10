@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/config/routes.dart';
+import 'package:notes_app/core/common/constants/constans.dart';
 import 'package:notes_app/core/common/themes/theme_viewmodel.dart';
-import 'package:notes_app/features/notes/view_model/delete_notes_view_model.dart';
+import 'package:notes_app/features/hidden_notes/widgets/bottom_sheet.dart';
+import 'package:notes_app/features/notes/view_model/ui_view_model.dart';
+import 'package:notes_app/main.dart';
 import 'package:notes_app/services/auth_services.dart';
 import 'package:provider/provider.dart';
 
@@ -16,30 +19,34 @@ class NotesAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.read<DeleteNotesViewModel>();
+    final authProvider = context.read<AuthServices>();
+    final provider = context.read<UiViewModel>();
     return SliverAppBar.large(
+      automaticallyImplyLeading: false,
       leading:
-          context.watch<DeleteNotesViewModel>().isSelectedMode
+          context.watch<UiViewModel>().isSelectedMode
               ? IconButton(
-                onPressed:
-                    () => context.read<DeleteNotesViewModel>().clearSelection(),
-                icon: Icon(Icons.close),
+                onPressed: () => context.read<UiViewModel>().clearSelection(),
+                icon: const Icon(Icons.close),
               )
               : null,
       actions: [
         IconButton(
           onPressed: () {
-            context.read<AuthServices>().message =
-                'Enter privacy Protection Password';
-            Navigator.pushNamed(context, Routes.authenticateUser);
+            if (authProvider.getSwitch(enableAuth)) {
+              authProvider.message = 'Enter privacy Protection Password';
+              navigation.push(Routes.authenticateUser);
+            } else {
+              showBottomAlertDialog(context);
+            }
           },
-          icon: Icon(Icons.folder_outlined),
+          icon: const Icon(Icons.folder_outlined),
         ),
         IconButton(
           onPressed: () {
             context.read<ThemeViewmodel>().toggleTheme();
           },
-          icon: Icon(Icons.dark_mode_rounded),
+          icon: const Icon(Icons.dark_mode_rounded),
         ),
       ],
       title: Text(
