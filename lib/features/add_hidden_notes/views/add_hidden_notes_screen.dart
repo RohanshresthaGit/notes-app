@@ -1,63 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/core/common/widgets/secondary_app_bar.dart';
 import 'package:notes_app/core/common/widgets/text_field_component.dart';
-import 'package:notes_app/features/add_notes/view_model/add_notes_view_model.dart';
 import 'package:notes_app/main.dart';
 import 'package:provider/provider.dart';
 
-import '../../notes/view_model/view_notes_view_model.dart';
+import '../../hidden_notes/view_model/hidden_notes_view_model.dart';
+import '../view_model/add_hidden_notes_view_model.dart';
 
-class AddNotesViews extends StatefulWidget {
+class AddHiddenNotesViews extends StatefulWidget {
   final bool isUpdate;
   final int index;
-  const AddNotesViews({super.key, this.isUpdate = false, this.index = 0});
+  const AddHiddenNotesViews({super.key, this.isUpdate = false, this.index = 0});
 
   @override
-  State<AddNotesViews> createState() => _AddNotesViewsState();
+  State<AddHiddenNotesViews> createState() => _AddNotesHiddenViewsState();
 }
 
-class _AddNotesViewsState extends State<AddNotesViews> {
-
-  late AddNotesViewModel provider;
-  late NotesViewModel viewNotes;
+class _AddNotesHiddenViewsState extends State<AddHiddenNotesViews> {
+  late AddHiddenNotesViewModel provider;
+  late HiddenNotesViewModel hiddenNotesViewModel;
 
   @override
   void initState() {
     super.initState();
 
-    provider = context.read<AddNotesViewModel>();
-    viewNotes = context.read<NotesViewModel>();
+    provider = context.read<AddHiddenNotesViewModel>();
+    hiddenNotesViewModel = context.read<HiddenNotesViewModel>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       if (widget.isUpdate) {
-        final note = viewNotes.notes[widget.index];
+        final note = hiddenNotesViewModel.hiddenNotes[widget.index];
         provider.loadNoteForUpdate(note);
       } else {
-        viewNotes.titleController.clear();
-        viewNotes.descriptionController.clear();
+        hiddenNotesViewModel.titleController.clear();
+        hiddenNotesViewModel.descriptionController.clear();
       }
-      
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<AddNotesViewModel>();
+    final provider = context.watch<AddHiddenNotesViewModel>();
     final date = provider.formattedDate();
     return Scaffold(
       appBar: NotesSecondaryAppBar(
-        appBarTitle: ' ${widget.isUpdate ? "Update" : "Add"} Notes',
+        appBarTitle: ' ${widget.isUpdate ? "Update" : "Add"} Hidden Notes',
         canPop: true,
         onBack: () => navigation.pop(),
       ),
       body: SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFieldComponent(
-              controller: viewNotes.titleController,
+              controller: hiddenNotesViewModel.titleController,
               hintText: 'Title',
               onChanged:
                   (value) => provider.onTextChanged(
@@ -66,7 +63,7 @@ class _AddNotesViewsState extends State<AddNotesViews> {
             ),
             Text('   $date  |  ${provider.currentCharectersCount} charecters'),
             TextFieldComponent(
-              controller: viewNotes.descriptionController,
+              controller: hiddenNotesViewModel.descriptionController,
               hintText: 'Description',
               maxLines: 5,
               onChanged:

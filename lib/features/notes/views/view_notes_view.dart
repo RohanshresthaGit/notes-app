@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/config/routes.dart';
 import 'package:notes_app/core/common/widgets/app_bar.dart';
-import 'package:notes_app/features/notes/view_model/delete_notes_view_model.dart';
+import 'package:notes_app/features/notes/view_model/ui_view_model.dart';
 import 'package:notes_app/features/notes/view_model/view_notes_view_model.dart';
 import 'package:notes_app/features/notes/widgets/notes_tile_component.dart';
+import 'package:notes_app/services/move_notes_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/bottom_navigation_bar_item.dart';
@@ -13,37 +13,32 @@ class ViewNotesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final deleteNotesViewModel =
-        context.watch<DeleteNotesViewModel>().isSelectedMode;
+    final deleteNotesViewModel = context.watch<UiViewModel>().isSelectedMode;
+    final dVm = context.read<UiViewModel>();
+    final notesViewModel = context.read<NotesViewModel>();
+    final theme = Theme.of(context).textTheme.headlineMedium;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          NotesAppBar(appBarTitle: 'Notes'),
+          const NotesAppBar(appBarTitle: 'Notes'),
           SliverPadding(
-            padding: EdgeInsets.all(20),
-            sliver: Consumer<ViewNotesViewModel>(
-              builder: (context, value, child) {
+            padding: const EdgeInsets.all(20),
+            sliver: Consumer<NotesViewModel>(
+              builder: (_, value, __) {
                 if (value.notes.isEmpty) {
                   return SliverToBoxAdapter(
-                    child: Center(
-                      child: Text(
-                        'No Notes Found',
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                    ),
+                    child: Center(child: Text('No Notes Found', style: theme)),
                   );
                 }
                 return SliverList.separated(
-                  separatorBuilder: (context, index) => SizedBox(height: 15),
+                  separatorBuilder: (_, __) => const SizedBox(height: 15),
                   itemCount: value.notes.length,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (_, index) {
                     final note = value.notes[index];
-                    return NotesTileComponent(
+                    return NotesTileComponent<UiViewModel>(
+                      note: note,
                       index: index,
-                      title: note.title,
-                      description: note.description,
-                      createdAt: note.formattedDate,
                     );
                   },
                 );
@@ -53,8 +48,8 @@ class ViewNotesView extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: AnimatedSlide(
-        duration: Duration(milliseconds: 300),
-        offset: deleteNotesViewModel ? Offset(0, 0) : Offset(0, 1),
+        duration: const Duration(milliseconds: 300),
+        offset: deleteNotesViewModel ? const Offset(0, 0) : const Offset(0, 1),
         child:
             deleteNotesViewModel
                 ? BottomAppBar(
@@ -64,23 +59,18 @@ class ViewNotesView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       BottomNavigationItem(
-                        title: 'Hide',
-                        onTap: () {},
-                        icon: Icons.lock_sharp,
-                      ),
-                      BottomNavigationItem(
                         title: 'Move to',
-                        onTap: () {},
+                        onTap:
+                            () =>
+                                context
+                                    .read<MoveNotesViewModel>()
+                                    .moveNotesToHidden(),
                         icon: Icons.folder,
                       ),
                       BottomNavigationItem(
                         title: 'Delete',
                         icon: Icons.delete,
-                        onTap:
-                            () =>
-                                context
-                                    .read<DeleteNotesViewModel>()
-                                    .deleteNotes(),
+                        onTap: () => notesViewModel.deleteNotesByIndex(),
                       ),
                     ],
                   ),
@@ -91,8 +81,8 @@ class ViewNotesView extends StatelessWidget {
           deleteNotesViewModel
               ? null
               : FloatingActionButton(
-                onPressed: () => Navigator.pushNamed(context, Routes.addNotes),
-                child: Icon(Icons.add_outlined, size: 30),
+                onPressed: () => dVm.navigateToAdd(),
+                child: const Icon(Icons.add_outlined, size: 30),
               ),
     );
   }
