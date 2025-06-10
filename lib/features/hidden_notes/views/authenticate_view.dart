@@ -49,7 +49,7 @@ class AuthenticateView extends StatelessWidget {
             Text(watchAuthService.message),
             Consumer<AuthServices>(
               builder:
-                  (_, value, _) => Column(
+                  (_, value, __) => Column(
                     children: [
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.4,

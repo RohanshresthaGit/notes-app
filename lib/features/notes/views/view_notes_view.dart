@@ -25,14 +25,14 @@ class ViewNotesView extends StatelessWidget {
           SliverPadding(
             padding: const EdgeInsets.all(20),
             sliver: Consumer<NotesViewModel>(
-              builder: (_, value, _) {
+              builder: (_, value, __) {
                 if (value.notes.isEmpty) {
                   return SliverToBoxAdapter(
                     child: Center(child: Text('No Notes Found', style: theme)),
                   );
                 }
                 return SliverList.separated(
-                  separatorBuilder: (_, _) => const SizedBox(height: 15),
+                  separatorBuilder: (_, __) => const SizedBox(height: 15),
                   itemCount: value.notes.length,
                   itemBuilder: (_, index) {
                     final note = value.notes[index];

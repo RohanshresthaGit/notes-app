@@ -34,7 +34,7 @@ class NotesSecondaryAppBar extends StatelessWidget
       leading:
           canPop
               ? Consumer<HiddenNotesUiViewModel>(
-                builder: (_, viewModel, _) {
+                builder: (_, viewModel, __) {
                   return IconButton(
                     onPressed:
                         viewModel.isSelectedMode

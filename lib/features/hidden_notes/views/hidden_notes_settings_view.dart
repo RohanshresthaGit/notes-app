@@ -96,7 +96,7 @@ class HiddenNotesSettingsView extends StatelessWidget {
                             )
                             : Consumer<AuthServices>(
                               builder:
-                                  (_, provider, _) => Switch.adaptive(
+                                  (_, provider, __) => Switch.adaptive(
                                     value: provider.getSwitch(
                                       settingsTiles[index].hiveKey ?? '',
                                     ),

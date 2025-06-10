@@ -35,7 +35,7 @@ class _HiddenNotesViewsState extends State<HiddenNotesViews> {
           SliverPadding(
             padding: const EdgeInsets.all(20),
             sliver: Consumer<HiddenNotesViewModel>(
-              builder: (_, value, _) {
+              builder: (_, value, __) {
                 if (value.hiddenNotes.isEmpty) {
                   return SliverToBoxAdapter(
                     child: Center(
@@ -47,7 +47,7 @@ class _HiddenNotesViewsState extends State<HiddenNotesViews> {
                   );
                 }
                 return SliverList.separated(
-                  separatorBuilder: (_, _) => const SizedBox(height: 15),
+                  separatorBuilder: (_, __) => const SizedBox(height: 15),
                   itemCount: value.hiddenNotes.length,
                   itemBuilder: (_, index) {
                     final note = value.hiddenNotes[index];
@@ -63,7 +63,7 @@ class _HiddenNotesViewsState extends State<HiddenNotesViews> {
         ],
       ),
       bottomNavigationBar: Consumer<HiddenNotesUiViewModel>(
-        builder: (_, provider, _) {
+        builder: (_, provider, __) {
           return AnimatedSlide(
             duration: const Duration(milliseconds: 300),
             offset:
