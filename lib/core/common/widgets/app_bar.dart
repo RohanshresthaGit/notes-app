@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/config/routes.dart';
 import 'package:notes_app/core/common/constants/constans.dart';
+import 'package:notes_app/core/common/constants/constans.dart';
 import 'package:notes_app/core/common/themes/theme_viewmodel.dart';
 import 'package:notes_app/features/hidden_notes/widgets/bottom_sheet.dart';
 import 'package:notes_app/features/notes/view_model/ui_view_model.dart';
@@ -32,10 +33,11 @@ class NotesAppBar extends StatelessWidget implements PreferredSizeWidget {
               : null,
       actions: [
         IconButton(
-          onPressed: () {
+          onPressed: () async {
             if (authProvider.getSwitch(enableAuth)) {
               authProvider.message = 'Enter privacy Protection Password';
               navigation.push(Routes.authenticateUser);
+              await authProvider.authenticateWithBiometrics();
             } else {
               showBottomAlertDialog(context);
             }

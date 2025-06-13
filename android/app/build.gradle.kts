@@ -36,6 +36,9 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+    dependencies {
+        implementation("androidx.fragment:fragment:1.5.7")
+    }
 }
 
 flutter {

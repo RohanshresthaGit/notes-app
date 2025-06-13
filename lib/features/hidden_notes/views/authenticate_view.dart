@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/core/common/constants/constans.dart';
+import 'package:notes_app/core/common/constants/constans.dart';
 import 'package:notes_app/core/common/widgets/secondary_app_bar.dart';
+import 'package:notes_app/main.dart';
 import 'package:notes_app/main.dart';
 import 'package:notes_app/services/auth_services.dart';
 import 'package:pattern_lock/pattern_lock.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/routes.dart';
+import '../../../config/routes.dart';
 import '../../../core/common/constants/app_colors.dart';
 
-class AuthenticateView extends StatelessWidget {
+class AuthenticateView extends StatefulWidget {
   const AuthenticateView({
     super.key,
     required this.isChangePattern,
@@ -18,10 +21,15 @@ class AuthenticateView extends StatelessWidget {
   final bool isChangePattern, isForgotPattern;
 
   @override
+  State<AuthenticateView> createState() => _AuthenticateViewState();
+}
+
+class _AuthenticateViewState extends State<AuthenticateView> {
+  @override
   Widget build(BuildContext context) {
     final provider = context.read<AuthServices>();
-    final theme = Theme.of(context);
     final watchAuthService = context.watch<AuthServices>();
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: NotesSecondaryAppBar(
         hasActions: true,
@@ -57,17 +65,17 @@ class AuthenticateView extends StatelessWidget {
                       fillPoints: true,
                       pointRadius: 3,
                       relativePadding: 0.5,
-                      onInputComplete: (input) async => isForgotPattern
+                      onInputComplete: (input) async => widget.isForgotPattern
                           ? await provider.forgotPattern(input)
-                          : isChangePattern
+                          : widget.isChangePattern
                               ? await provider.changePattern(
                                   input,
-                                  isChangePattern,
+                                  widget.isChangePattern,
                                 )
                               : provider.getPatternCallBack(
                                   input,
                                   context,
-                                  isChangePattern,
+                                  widget.isChangePattern,
                                 ),
                       notSelectedColor: theme.colorScheme.onPrimary,
                       selectedColor: theme.colorScheme.onPrimary,

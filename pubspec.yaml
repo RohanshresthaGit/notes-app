@@ -41,6 +41,7 @@ dependencies:
   build_runner: 2.4.13
   intl: ^0.20.2
   pattern_lock: ^2.0.0
+  local_auth: ^2.3.0
 
 dev_dependencies:
   flutter_test:
