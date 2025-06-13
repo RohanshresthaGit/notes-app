@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth_android/local_auth_android.dart';
 import 'package:notes_app/config/routes.dart';
 import 'package:notes_app/core/common/constants/constans.dart';
 import 'package:notes_app/main.dart';
-import 'package:notes_app/main.dart';
 
 class AuthServices with ChangeNotifier {
   late Box _box;
-  bool isConfirmPattern = false;
-  bool showButton = false;
-  bool isPatternValidated = false;
-  List<int> userPattern = [];
   bool isConfirmPattern = false;
   bool showButton = false;
   bool isPatternValidated = false;
@@ -42,7 +36,6 @@ class AuthServices with ChangeNotifier {
   }
 
   List<int> getPattern() {
-    final patter = (_box.get(pattern) as List<dynamic>?)?.cast<int>() ?? [];
     final patter = (_box.get(pattern) as List<dynamic>?)?.cast<int>() ?? [];
     return patter;
   }
@@ -207,12 +200,12 @@ class AuthServices with ChangeNotifier {
     message = 'Enter privacy Protection Password';
   }
 
-  Future<void> authenticateWithBiometrics() async {
+  Future<bool> authenticateWithBiometrics() async {
     if (getSwitch(enableBiometrics) == false ||
         isConfirmPattern ||
         isPatternValidated ||
         showButton) {
-      return;
+      return false;
     }
     final isBiometricAvailable = await _biometrics.canCheckBiometrics;
     if (isBiometricAvailable) {
@@ -231,6 +224,7 @@ class AuthServices with ChangeNotifier {
 
         if (didAuthenticate) {
           navigation.go(Routes.hiddenNotes);
+          return true;
         } else {
           message = 'Enter privacy Protection Password';
         }
@@ -238,6 +232,7 @@ class AuthServices with ChangeNotifier {
         debugPrint('Error during biometric authentication: $e');
       }
     }
+    return false;
   }
 }
 

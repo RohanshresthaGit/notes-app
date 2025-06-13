@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/config/routes.dart';
 import 'package:notes_app/core/common/constants/constans.dart';
-import 'package:notes_app/core/common/constants/constans.dart';
 import 'package:notes_app/core/common/themes/theme_viewmodel.dart';
 import 'package:notes_app/features/hidden_notes/widgets/bottom_sheet.dart';
 import 'package:notes_app/features/notes/view_model/ui_view_model.dart';
@@ -24,13 +23,12 @@ class NotesAppBar extends StatelessWidget implements PreferredSizeWidget {
     final provider = context.read<UiViewModel>();
     return SliverAppBar.large(
       automaticallyImplyLeading: false,
-      leading:
-          context.watch<UiViewModel>().isSelectedMode
-              ? IconButton(
-                onPressed: () => context.read<UiViewModel>().clearSelection(),
-                icon: const Icon(Icons.close),
-              )
-              : null,
+      leading: context.watch<UiViewModel>().isSelectedMode
+          ? IconButton(
+              onPressed: () => context.read<UiViewModel>().clearSelection(),
+              icon: const Icon(Icons.close),
+            )
+          : null,
       actions: [
         IconButton(
           onPressed: () async {
