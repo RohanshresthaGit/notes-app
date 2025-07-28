@@ -20,15 +20,19 @@ class NotesAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.read<AuthServices>();
-    final provider = context.read<UiViewModel>();
     return SliverAppBar.large(
       automaticallyImplyLeading: false,
-      leading: context.watch<UiViewModel>().isSelectedMode
-          ? IconButton(
-              onPressed: () => context.read<UiViewModel>().clearSelection(),
-              icon: const Icon(Icons.close),
-            )
-          : null,
+      leading: Selector<UiViewModel, bool>(
+        selector: (_, vm) => vm.isSelectedMode,
+        builder: (context, value, child) {
+          return value
+              ? IconButton(
+                  onPressed: () => context.read<UiViewModel>().clearSelection(),
+                  icon: const Icon(Icons.close),
+                )
+              : const SizedBox.shrink();
+        },
+      ),
       actions: [
         IconButton(
           onPressed: () async {
@@ -49,10 +53,16 @@ class NotesAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.dark_mode_rounded),
         ),
       ],
-      title: Text(
-        provider.isSelectedMode
-            ? '${provider.selectedItems.length.toString()} item selected'
-            : appBarTitle,
+      title: Selector<UiViewModel, bool>(
+        selector: (_, vm) => vm.isSelectedMode,
+        builder: (context, isSelectedMode, child) {
+          if (isSelectedMode) {
+            final count = context
+                .select<UiViewModel, int>((vm) => vm.selectedItems.length);
+            return Text('$count item selected');
+          }
+          return Text(appBarTitle);
+        },
       ),
     );
   }

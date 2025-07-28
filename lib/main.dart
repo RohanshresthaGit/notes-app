@@ -79,18 +79,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeViewmodel>(
-      builder:
-          (context, theme, child) => MaterialApp(
-            navigatorKey: NavigationService.instance.navigationKey,
-            debugShowCheckedModeBanner: false,
-            title: 'Notes',
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            initialRoute: Routes.splash,
-            themeMode: theme.themeMode,
-            onGenerateRoute: generateRoute,
-          ),
+    return MaterialApp(
+      navigatorKey: NavigationService.instance.navigationKey,
+      debugShowCheckedModeBanner: false,
+      title: 'Notes',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      initialRoute: Routes.splash,
+      onGenerateRoute: generateRoute,
+      builder: (context, child) {
+        return Selector<ThemeViewmodel, ThemeMode>(
+          selector: (_, vm) => vm.themeMode,
+          builder: (context, value, _) {
+            return AnimatedTheme(
+                curve: Curves.fastEaseInToSlowEaseOut,
+                duration: const Duration(milliseconds: 300),
+                data: value == ThemeMode.light
+                    ? AppTheme.lightTheme
+                    : AppTheme.darkTheme,
+                child: child!);
+          },
+        );
+      },
     );
   }
 }

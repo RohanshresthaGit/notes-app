@@ -40,38 +40,48 @@ class _AddNotesHiddenViewsState extends State<AddHiddenNotesViews> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<AddHiddenNotesViewModel>();
     final date = provider.formattedDate();
-    return Scaffold(
-      appBar: NotesSecondaryAppBar(
-        appBarTitle: ' ${widget.isUpdate ? "Update" : "Add"} Hidden Notes',
-        canPop: true,
-        onBack: () => navigation.pop(),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFieldComponent(
-              controller: hiddenNotesViewModel.titleController,
-              hintText: 'Title',
-              onChanged:
-                  (value) => provider.onTextChanged(
-                    widget.isUpdate ? widget.index : null,
-                  ),
-            ),
-            Text('   $date  |  ${provider.currentCharectersCount} charecters'),
-            TextFieldComponent(
-              controller: hiddenNotesViewModel.descriptionController,
-              hintText: 'Description',
-              maxLines: 5,
-              onChanged:
-                  (value) => provider.onTextChanged(
-                    widget.isUpdate ? widget.index : null,
-                  ),
-            ),
-          ],
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop && provider.currentCharectersCount > 0) {
+          provider.dontSave();
+        }
+      },
+      child: Scaffold(
+        appBar: NotesSecondaryAppBar(
+          appBarTitle: ' ${widget.isUpdate ? "Update" : "Add"} Hidden Notes',
+          canPop: true,
+          onBack: () => navigation.pop(),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFieldComponent(
+                controller: hiddenNotesViewModel.titleController,
+                hintText: 'Title',
+                onChanged: (value) => provider.onTextChanged(
+                  widget.isUpdate ? widget.index : null,
+                ),
+              ),
+              Selector<AddHiddenNotesViewModel, int>(
+                selector: (_, provider) => provider.currentCharectersCount,
+                builder: (context, value, child) {
+                  return Text(
+                      '   $date  |  ${provider.currentCharectersCount} charecters');
+                },
+              ),
+              TextFieldComponent(
+                controller: hiddenNotesViewModel.descriptionController,
+                hintText: 'Description',
+                maxLines: 5,
+                onChanged: (value) => provider.onTextChanged(
+                  widget.isUpdate ? widget.index : null,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -34,11 +34,21 @@ class AddHiddenNotesViewModel with ChangeNotifier {
     updateCharecterCount();
   }
 
+  void dontSave() {
+    _timer?.cancel();
+    hiddenNotesViewModel.titleController.clear();
+    hiddenNotesViewModel.descriptionController.clear();
+    currentCharectersCount = 0;
+    notifyListeners();
+  }
+
   void onTextChanged(int? index) {
     _timer?.cancel();
     _timer = Timer(
       const Duration(seconds: 3),
-      index == null ? hiddenNotesViewModel.saveNotes : () => hiddenNotesViewModel.updateNotes(index),
+      index == null
+          ? hiddenNotesViewModel.saveNotes
+          : () => hiddenNotesViewModel.updateNotes(index),
     );
   }
 

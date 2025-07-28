@@ -32,13 +32,18 @@ class _HiddenNotesViewsState extends State<HiddenNotesViews> {
         },
       ),
       body: CustomScrollView(
+        physics: context.select<HiddenNotesViewModel, ScrollPhysics>((notes) =>
+            notes.hiddenNotes.isEmpty
+                ? const NeverScrollableScrollPhysics()
+                : const AlwaysScrollableScrollPhysics()),
         slivers: [
           SliverPadding(
             padding: const EdgeInsets.all(20),
             sliver: Consumer<HiddenNotesViewModel>(
               builder: (_, value, __) {
                 if (value.hiddenNotes.isEmpty) {
-                  return SliverToBoxAdapter(
+                  return SliverFillRemaining(
+                    hasScrollBody: false,
                     child: Center(
                       child: Text(
                         'No Notes Found',

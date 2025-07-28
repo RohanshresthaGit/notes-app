@@ -39,9 +39,13 @@ class AddNotesViewModel with ChangeNotifier {
     );
   }
 
-
-
-
+  void dontSave() {
+    _timer?.cancel();
+    viewNotes.titleController.clear();
+    viewNotes.descriptionController.clear();
+    currentCharectersCount = 0;
+    notifyListeners();
+  }
 
   @override
   void dispose() {

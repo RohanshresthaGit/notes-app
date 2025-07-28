@@ -87,9 +87,7 @@ class NotesViewModel with ChangeNotifier {
     final selectedIndex = uiViewModel.selectedItems;
     if (selectedIndex.isEmpty) return;
     final List<Notes> notesToMove = <Notes>[];
-    print(selectedIndex);
     for (int index in selectedIndex) {
-      print(index);
       final note = getNotesAt(index);
       if (note != null && !_hiddenNotesService.isNoteAvailable(index)) {
         notesToMove.add(

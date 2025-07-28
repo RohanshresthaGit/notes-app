@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/core/common/constants/constans.dart';
-import 'package:notes_app/core/common/constants/constans.dart';
 import 'package:notes_app/core/common/widgets/secondary_app_bar.dart';
-import 'package:notes_app/main.dart';
 import 'package:notes_app/main.dart';
 import 'package:notes_app/services/auth_services.dart';
 import 'package:pattern_lock/pattern_lock.dart';
 import 'package:provider/provider.dart';
 
-import '../../../config/routes.dart';
 import '../../../config/routes.dart';
 import '../../../core/common/constants/app_colors.dart';
 
@@ -28,7 +25,6 @@ class _AuthenticateViewState extends State<AuthenticateView> {
   @override
   Widget build(BuildContext context) {
     final provider = context.read<AuthServices>();
-    final watchAuthService = context.watch<AuthServices>();
     final theme = Theme.of(context);
     return Scaffold(
       appBar: NotesSecondaryAppBar(
@@ -54,7 +50,12 @@ class _AuthenticateViewState extends State<AuthenticateView> {
                 ),
               ),
             ),
-            Text(watchAuthService.message),
+            Selector<AuthServices, String>(
+              selector: (_, message) => message.message,
+              builder: (context, message, child) {
+                return Text(message);
+              },
+            ),
             Consumer<AuthServices>(
               builder: (_, value, __) => Column(
                 children: [

@@ -73,46 +73,43 @@ class HiddenNotesSettingsView extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    subtitle:
-                        settingsTiles[index].subtitle != null
-                            ? Text(
-                              settingsTiles[index].subtitle!,
-                              style: theme.textTheme.bodySmall,
-                            )
-                            : null,
-                    trailing:
-                        settingsTiles[index].subtitle == null
-                            ? Consumer<AuthServices>(
-                              builder: (context, provider, child) {
-                                return IconButton(
-                                  icon: const Icon(Icons.arrow_forward_ios),
-                                  onPressed: () {
-                                    navigation.push(Routes.authenticateUser, {
-                                      "isChange": true,
-                                    });
-                                  },
+                    subtitle: settingsTiles[index].subtitle != null
+                        ? Text(
+                            settingsTiles[index].subtitle!,
+                            style: theme.textTheme.bodySmall,
+                          )
+                        : null,
+                    trailing: settingsTiles[index].subtitle == null
+                        ? Consumer<AuthServices>(
+                            builder: (context, provider, child) {
+                              return IconButton(
+                                icon: const Icon(Icons.arrow_forward_ios),
+                                onPressed: () {
+                                  navigation.push(Routes.authenticateUser, {
+                                    "isChange": true,
+                                  });
+                                },
+                              );
+                            },
+                          )
+                        : Consumer<AuthServices>(
+                            builder: (_, provider, __) => Switch.adaptive(
+                              value: provider.getSwitch(
+                                settingsTiles[index].hiveKey ?? '',
+                              ),
+                              onChanged: (value) {
+                                provider.setSwitch(
+                                  settingsTiles[index].hiveKey ?? '',
+                                  value,
                                 );
+                                if (settingsTiles[index].hiveKey ==
+                                        enableAuth &&
+                                    value == false) {
+                                  navigation.go(Routes.notes);
+                                }
                               },
-                            )
-                            : Consumer<AuthServices>(
-                              builder:
-                                  (_, provider, __) => Switch.adaptive(
-                                    value: provider.getSwitch(
-                                      settingsTiles[index].hiveKey ?? '',
-                                    ),
-                                    onChanged: (value) {
-                                      provider.setSwitch(
-                                        settingsTiles[index].hiveKey ?? '',
-                                        value,
-                                      );
-                                      if (settingsTiles[index].hiveKey ==
-                                              enableAuth &&
-                                          value == false) {
-                                        navigation.go(Routes.notes);
-                                      }
-                                    },
-                                  ),
                             ),
+                          ),
                   );
                 },
               ),
