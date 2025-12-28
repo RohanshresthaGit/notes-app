@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
       title: 'Notes',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      initialRoute: Routes.splash,
+      initialRoute: Routes.notes,
       onGenerateRoute: generateRoute,
       builder: (context, child) {
         return Selector<ThemeViewmodel, ThemeMode>(

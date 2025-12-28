@@ -30,6 +30,7 @@ class NotesTileComponent<T extends BaseUiViewModel> extends StatelessWidget {
         children: [
           Text(
             note.description,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.bodyMedium,
           ),
@@ -37,14 +38,12 @@ class NotesTileComponent<T extends BaseUiViewModel> extends StatelessWidget {
         ],
       ),
       trailing: Consumer<T>(
-        builder:
-            (context, provider, child) =>
-                provider.isSelectedMode
-                    ? Checkbox(
-                      value: provider.selectedItems.contains(index),
-                      onChanged: (value) => provider.onTap(index),
-                    )
-                    : const SizedBox.shrink(),
+        builder: (context, provider, child) => provider.isSelectedMode
+            ? Checkbox(
+                value: provider.selectedItems.contains(index),
+                onChanged: (value) => provider.onTap(index),
+              )
+            : const SizedBox.shrink(),
       ),
     );
   }

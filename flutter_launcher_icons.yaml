@@ -1,0 +1,7 @@
+flutter_icons:
+  android: true
+  ios: false
+  image_path: "assets/images/logo.png"
+
+  # Run this command to generate launcher icons:
+  # dart pub run flutter_launcher_icons  

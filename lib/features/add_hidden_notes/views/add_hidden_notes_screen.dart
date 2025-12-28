@@ -75,7 +75,7 @@ class _AddNotesHiddenViewsState extends State<AddHiddenNotesViews> {
               TextFieldComponent(
                 controller: hiddenNotesViewModel.descriptionController,
                 hintText: 'Description',
-                maxLines: 5,
+                maxLines: null,
                 onChanged: (value) => provider.onTextChanged(
                   widget.isUpdate ? widget.index : null,
                 ),

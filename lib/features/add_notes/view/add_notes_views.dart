@@ -75,7 +75,7 @@ class _AddNotesViewsState extends State<AddNotesViews> {
               TextFieldComponent(
                 controller: viewNotes.descriptionController,
                 hintText: 'Description',
-                maxLines: 5,
+                maxLines: null,
                 onChanged: (value) => provider.onTextChanged(
                   widget.isUpdate ? widget.index : null,
                 ),

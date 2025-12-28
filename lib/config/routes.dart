@@ -9,8 +9,8 @@ import 'package:notes_app/features/splash_screen/views/splash_page.dart';
 import '../features/add_hidden_notes/views/add_hidden_notes_screen.dart';
 
 class Routes {
-  static const String splash = '/';
-  static const String notes = '/notes';
+  // static const String splash = '/';
+  static const String notes = '/';
   static const String addNotes = '/add';
   static const String updateNotes = '/update';
   static const String authenticateUser = '/authenticateUser';
@@ -22,8 +22,8 @@ class Routes {
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
-    case Routes.splash:
-      return MaterialPageRoute(builder: (context) => const SplashPage());
+    // case Routes.splash:
+    //   return MaterialPageRoute(builder: (context) => const SplashPage());
     case Routes.notes:
       return _createRouteAnimation(const ViewNotesView(), animationType: 'LR');
     case Routes.addNotes:
